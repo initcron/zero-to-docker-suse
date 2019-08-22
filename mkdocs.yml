@@ -1,0 +1,20 @@
+site_name: Zero to Docker (Suse Version)
+pages:
+  - Home: "index.md"
+  - Labs:
+     - Getting Started with Docker: "chapter4-getting_started.md"
+     - Container Operations : "chapter5-container_operations.md"
+     - Dockerizing your own App : "dockerizing-facebooc.md"
+     - Connecting apps with Docker Compose : "chapter7-linking_containers.md"
+     - Docker Single Host Networking: "chapterx-docker-networking.md"
+     - Docker Data Persistence : "persistent-volumes.md"
+  - Advanced Topics:
+     - Distributing Images: "distributing_images.md"
+     - SWARM Networking Deep Dive: "swarm-networking-deepdive.md"
+     - Troubleshooting Toolkit: "troubleshooting-toolkit.md"
+     - SWARM, UCP, DTR Troubleshooting: "docker-swarm-ucp-troubleshooting.md"
+     - Docker Security: "docker-security.md"
+docs_dir: manuscript
+theme: readthedocs
+plugins:
+    - search
