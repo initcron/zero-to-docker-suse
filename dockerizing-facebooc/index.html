@@ -70,7 +70,7 @@
     <a class="current" href="./">Dockerizing your own App</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#project-build-a-docker-image-for-facebooc-app">Project : Build a docker image for Facebooc app</a></li>
+    <li class="toctree-l3"><a href="#building-docker-image-for-facebooc-app">Building docker image for Facebooc app</a></li>
     
         <ul>
         
@@ -79,6 +79,9 @@
             <li><a class="toctree-l4" href="#approach-2-building-image-with-dockerfile">Approach 2: Building image with Dockerfile</a></li>
         
         </ul>
+    
+
+    <li class="toctree-l3"><a href="#project-building-facebooc-image-with-suse-linux">Project: Building Facebooc image with Suse Linux</a></li>
     
 
     </ul>
@@ -161,17 +164,17 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="project-build-a-docker-image-for-facebooc-app">Project : Build a docker image for Facebooc app</h2>
-<p><a href="https://github.com/schoolofdevops/facebooc">Facebooc</a> is a app written in C. Its a simple, web based social media application clone and used SQLite as a database backend. As a devops engineer, you have been tasked with building an image for facebooc app and publish it to docker hub registry. </p>
+                <h2 id="building-docker-image-for-facebooc-app">Building docker image for Facebooc app</h2>
+<p><a href="https://github.com/schoolofdevops/facebooc">Facebooc</a> is a app written in C. Its a simple, web based social media application clone and used SQLite as a database backend. As a devops engineer, you have been tasked with building an image for facebooc app and publish it to docker hub registry.</p>
 <h3 id="approach-1-building-docker-image-for-facebooc-app-manually">Approach 1: Building docker image for facebooc app manually</h3>
-<p>on the host </p>
+<p>on the host</p>
 <pre><code>git clone https://github.com/schoolofdevops/facebooc.git
 docker container run -idt --name fb -p 16000:16000 ubuntu bash
 docker cp facebooc fb:/opt
 docker exec -it fb bash
 </code></pre>
 
-<p>inside the container </p>
+<p>inside the container</p>
 <pre><code>cd /opt/facebooc/
 apt-get update
 apt-get install -yq build-essential make libsqlite3-dev sqlite3
@@ -179,12 +182,12 @@ make all
 bin/facebooc
 </code></pre>
 
-<p>on the host </p>
-<pre><code>docker diff fb 
+<p>on the host</p>
+<pre><code>docker diff fb
 
 docker container commit fb &lt;docker_id&gt;/facebooc:v1
 
-docker login 
+docker login
 
 docker image push &lt;docker_id&gt;/facebooc:v1
 
@@ -192,51 +195,80 @@ docker image push &lt;docker_id&gt;/facebooc:v1
 
 <h3 id="approach-2-building-image-with-dockerfile">Approach 2: Building image with Dockerfile</h3>
 <p>Change into facebooc directory which containts the source code.  This assumes you have already cloned the repo. If not, clone it from https://github.com/schoolofdevops/facebooc</p>
-<pre><code>cd facebooc 
+<pre><code>cd facebooc
 ls
 
 LICENSE  Makefile  README.md  include  src  static  templates
 
 </code></pre>
 
-<p>Add/create  Dockerfile the the same directory (facebooc) witht the following content, </p>
+<p>Add/create  Dockerfile the the same directory (facebooc) witht the following content,</p>
 <pre><code>FROM  ubuntu
 
 
 WORKDIR /opt/facebooc
 
 RUN  apt-get update &amp;&amp;  \
-     apt-get install -yq build-essential make git libsqlite3-dev sqlite3 
+     apt-get install -yq build-essential make git libsqlite3-dev sqlite3
 
 
 COPY . /opt/facebooc
 
-RUN  make all 
+RUN  make all
 
 EXPOSE 16000
 
 CMD &quot;bin/facebooc&quot;
 </code></pre>
 
-<p>Build image using, </p>
+<p>Build image using,</p>
 <pre><code> docker build -t &lt;docker_id&gt;/facebooc:v2 .
 </code></pre>
 
-<p>where, 
+<p>where,
   <docker_id> : your docker registry user/namespace. Replace this with the actual user</p>
-<p>validate </p>
+<p>validate</p>
 <pre><code>docker image ls
 docker image history &lt;docker_id&gt;/facebooc:v2
 docker container run -idt -P &lt;docker_id&gt;/facebooc:v2
-docker ps 
+docker ps
 </code></pre>
 
-<p>Check by connecting to your host:port to validate if facebooc web application shows up. </p>
-<p>Once validated, tag and push </p>
+<p>Check by connecting to your host:port to validate if facebooc web application shows up.</p>
+<p>Once validated, tag and push</p>
 <pre><code>docker image tag &lt;docker_id&gt;/facebooc:v2 &lt;docker_id&gt;/facebooc:latest
 docker login
 docker push &lt;docker_id&gt;/facebooc
 </code></pre>
+
+<h2 id="project-building-facebooc-image-with-suse-linux">Project: Building Facebooc image with Suse Linux</h2>
+<p>Now that you understand the process of building an image, you have been tasked to port it to Suse Linux with Leap distribution version 15.  </p>
+<ul>
+<li>Use the following instructions to test build the image</li>
+<li>Following instructions were tested with opensuse/leap:15 docker image</li>
+<li>Before running the following commands, ensure you have created a container with opensuse/leap:1 image  </li>
+<li>You should have copied over the code cloned from https://github.com/schoolofdevops/facebooc to the container created as per description above</li>
+</ul>
+<pre><code>
+zypper se -t pattern devel
+
+zypper install  -yt pattern devel_basis
+
+zypper se sqlite
+
+zypper install  -y sqlite3 sqlite3-devel make
+
+# change into the directory where facebooc code is copied to
+
+cd facebooc
+
+make all
+
+bin/facebooc
+
+</code></pre>
+
+<p>Once you test build it, convert it into a Dockerfile, and verify it works by building it with <em>docker build</em> command.</p>
               
             </div>
           </div>

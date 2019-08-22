@@ -76,11 +76,7 @@
         
             <li><a class="toctree-l4" href="#making-containers-persist">Making Containers Persist</a></li>
         
-            <li><a class="toctree-l4" href="#creating-and-starting-a-container-instead-of-running">Creating and Starting a Container instead of Running</a></li>
-        
-            <li><a class="toctree-l4" href="#creating-pretty-reports-with-formatters">Creating Pretty Reports with Formatters</a></li>
-        
-            <li><a class="toctree-l4" href="#checking-disk-utilisation-by">Checking disk utilisation by</a></li>
+            <li><a class="toctree-l4" href="#launching-a-suse-linux-15-container">Launching a Suse Linux 15 container</a></li>
         
             <li><a class="toctree-l4" href="#stopping-and-removing-containers">Stopping and Removing Containers</a></li>
         
@@ -176,9 +172,7 @@
             <div class="section">
               
                 <h1 id="getting-started-with-docker">Getting Started with Docker</h1>
-<p>In this chapter, we are going to learn about docker shell, the command line utility and how to use it to
-launch containers. We will also learn what it means to run a container, its lifecycle and perform basic
-operations such as creating, starting, stopping, removing, pausing containers and checking the status etc.</p>
+<p>In this chapter, you are going to learn about docker shell, the command line utility and how to use it to launch containers. You will also learn what it means to run a container, its lifecycle and perform basic operations such as creating, starting, stopping, removing, pausing containers and checking the status etc.</p>
 <h3 id="using-docker-cli">Using docker cli</h3>
 <p>We can use docker cli to interact with docker daemon. Various functions of docker command is given below. Try this yourself by runnig <strong>$sudo docker</strong> command  </p>
 <pre><code>docker
@@ -266,7 +260,7 @@ docker system info
 <pre><code>Docker version 18.03.1-ce, build 9ee9f40
 </code></pre>
 
-<p>[Output of <strong>docker version</strong>]  </p>
+<p>[Output of <strong>docker version</strong>]   </p>
 <pre><code>Client:
  Version:      18.03.1-ce
  API version:  1.37
@@ -308,17 +302,17 @@ Status: Downloaded newer image for alpine:3.4
  15:24:34 up  7:36,  load average: 0.00, 0.03, 0.04
 </code></pre>
 
-<p><strong>What happened?</strong><br />
-This command will<br />
+<p><strong>What happened?</strong>  </p>
+<p>This command will<br />
   * Pull the <strong>alpine</strong> image file from <strong>docker hub</strong>, a cloud registry
   * Create a runtime environment/ container with the above image <br />
   * Launch a program (called <strong>uptime</strong>) inside that container<br />
   * Stream that output to the terminal<br />
   * Stop the container once the program is exited</p>
 <p><strong>Where did my container go?</strong>  </p>
-<pre><code>docker container  ps
+<pre><code>docker   ps
 
-docker container  ps -l
+docker   ps -l
 </code></pre>
 
 <p>The point here to remember is that, when that executable stops running inside the container, the container itself will stop<br />
@@ -331,6 +325,15 @@ This process will further be explained under the <strong>lifecycle of a containe
 
 <p>Now docker no longer pulls the image again from registry, because <strong>it has stored the image locally</strong> from the previous run<br />
 So once an image is pulled, we can make use of that image to create and run as many container as we want without the need of downloading the image again. However it has created a new instance of the iamge/container.</p>
+<p>Try running a few more containers</p>
+<pre><code>docker run alpine:3.4 free
+
+docker run alpine:3.4 uname -a
+
+docker run alpine:3.4 ps aux
+
+</code></pre>
+
 <h3 id="checking-status-of-the-containers">Checking Status of the containers</h3>
 <p>We have understood how docker run commands works. But what if you want to see list of running containers and history of containers that had run and exited? This can be done by executing the following commands  </p>
 <pre><code>docker ps
@@ -375,141 +378,49 @@ c082972f66d6        schoolofdevops/ghost:0.3.1   &quot;/entrypoint.sh npm s&quot
 
 <p>This command will show all the container we have run so far.  </p>
 <h3 id="running-containers-in-interactive-mode">Running Containers in Interactive Mode</h3>
-<p>We can interact with docker containers by giving -it flags at the run time. These flags stand for<br />
-  * i - Interactive<br />
-  * t - tty</p>
-<pre><code>docker run -it alpine sh
+<p>We can interact with docker containers by giving -it flags at the run time. These flags stand for  </p>
+<ul>
+<li>i - Interactive  </li>
+<li>t - tty</li>
+</ul>
+<pre><code>docker run -it opensuse/leap:15 bash
 </code></pre>
 
 <p>[Output]  </p>
-<pre><code>Unable to find image 'alpine:latest' locally
-latest: Pulling from library/alpine
-ff3a5c916c92: Already exists
-Digest: sha256:7df6db5aa61ae9480f52f0b3a06a140ab98d427f86d8d5de0bedab9b8df6b1c0
-Status: Downloaded newer image for alpine:latest
-/ #
+<pre><code>Unable to find image 'opensuse/leap:15' locally
+15: Pulling from opensuse/leap
+2242934cd532: Pull complete
+Digest: sha256:50145e974549cec61181861ba86c831aeb4fc8ce7ee74dfd424cd39a029e7320
+Status: Downloaded newer image for opensuse/leap:15
+309d534d077d:/ #
 </code></pre>
 
-<p>As you see, we have landed straight into <strong>sh</strong> shell of that container. This is the result of using <strong>-it</strong> flags and mentioning that container to run the <strong>sh</strong> shell. Don't try to exit that container yet. We have to execute some other commands in it to understand the next topic  </p>
-<p>Namespaced:</p>
+<p>As you see, we have landed straight into <strong>bash</strong> shell of that container. This is the result of using <strong>-it</strong> flags and mentioning that container to run the <strong>bash</strong> shell. Don't try to exit that container yet. We have to execute some other commands in it to understand the next topic  </p>
+<p><strong>Checking whats namespaced:</strong></p>
 <p>Like a full fledged OS, Docker container has its own namespaces<br />
 This enables Docker container to isolate itself from the host as well as other containers  </p>
 <p>Run the following commands and see that alpine container has its own namespaces and not inheriting much from <strong>host OS</strong>  </p>
-<p>[Command]  </p>
 <pre><code>cat /etc/issue
+
+ps aux
+
+zypper install -y net-tools-deprecated
+ifconfig
+
+hostname
 </code></pre>
 
-<p>[Output]  </p>
-<pre><code>Welcome to Alpine Linux 3.4
-Kernel \r on an \m (\l)
-</code></pre>
-
+<p><strong>Checking whats not namespaced:</strong>  </p>
+<p>We have understood that containers have their own namespaces. But will they share something to some extent? the answer is <strong>YES</strong>. Let's run the following commands on both the container and the host machine  </p>
 <p>[Command]  </p>
-<pre><code>ps aux
-</code></pre>
+<pre><code>uptime
 
-<p>[Output]  </p>
-<pre><code>PID   USER     TIME   COMMAND
-    1 root       0:00 sh
-    6 root       0:00 ps aux
-</code></pre>
+uname -a
 
-<p>[Command]  </p>
-<pre><code>ifconfig
-</code></pre>
+date  
 
-<p>[Output]  </p>
-<pre><code>eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:02
-          inet addr:172.17.0.2  Bcast:0.0.0.0  Mask:255.255.0.0
-          inet6 addr: fe80::42:acff:fe11:2%32640/64 Scope:Link
-          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
-          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
-          collisions:0 txqueuelen:0
-          RX bytes:648 (648.0 B)  TX bytes:648 (648.0 B)
+cat /proc/cpuinfo
 
-lo        Link encap:Local Loopback
-          inet addr:127.0.0.1  Mask:255.0.0.0
-          inet6 addr: ::1%32640/128 Scope:Host
-          UP LOOPBACK RUNNING  MTU:65536  Metric:1
-          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-          collisions:0 txqueuelen:0
-          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-</code></pre>
-
-<p>[Command]  </p>
-<pre><code>hostname
-</code></pre>
-
-<p>[Output]   </p>
-<pre><code>ae84d253ecb5
-</code></pre>
-
-<p>Shared:<br />
-We have understood that containers have their own namespaces. But will they share something to some extent? the answer is <strong>YES</strong>. Let's run the following commands on both the container and the host machine  </p>
-<p>[Command]  </p>
-<pre><code>uname -a
-</code></pre>
-
-<p>[Output - <strong>container</strong>]  </p>
-<pre><code>Linux ae84d253ecb5 3.10.0-327.28.3.el7.x86_64 #1 SMP Thu Aug 18 19:05:49 UTC 2016 x86_64 Linux
-
-</code></pre>
-
-<p>[Output - <strong>hostmachine</strong>]  </p>
-<pre><code>Linux dockerserver 3.10.0-327.28.3.el7.x86_64 #1 SMP Thu Aug 18 19:05:49 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
-</code></pre>
-
-<p>As you can see, the container uses the same Linux Kernel from the host machine. Just like <strong>uname</strong> command, the following commands share the same information as well. In order to avoid repetition, we will see the output of container alone.</p>
-<p>[Command]  </p>
-<pre><code>date  
-</code></pre>
-
-<p>[Output]    </p>
-<pre><code>Wed Sep 14 18:21:25 UTC 2016
-</code></pre>
-
-<p>[Command]  </p>
-<pre><code>cat /proc/cpuinfo
-</code></pre>
-
-<p>[Output]    </p>
-<pre><code>processor       : 0
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 94
-model name      : Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
-stepping        : 3
-cpu MHz         : 2592.002
-cache size      : 6144 KB
-physical id     : 0
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 0
-initial apicid  : 0
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc pni pclmulqdq monitor ssse3 cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch rdseed clflushopt
-bogomips        : 5184.00
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 39 bits physical, 48 bits virtual
-power management:
-</code></pre>
-
-<p>[Command]  </p>
-<pre><code>free
-</code></pre>
-
-<p>[Output]  </p>
-<pre><code>total       used       free     shared    buffers     cached
-Mem:       1884176     650660    1233516          0       1860     473248
--/+ buffers/cache:     175552    1708624
-Swap:      1048572          0    1048572
 
 </code></pre>
 
@@ -590,70 +501,22 @@ ps aux
 2533adf280ac        schoolofdevops/loop   &quot;program&quot;           6 minutes ago       Up 6 minutes                            prickly_bose
 </code></pre>
 
-<h3 id="creating-and-starting-a-container-instead-of-running">Creating and Starting a Container instead of Running</h3>
-<p>docker <strong>run</strong> command will create a container and start that container simultaneously. However docker gives you the granularity to create a container and not to run it at the time of creation. However, This container can be started by using <strong>start</strong> command  </p>
-<p>[Command]  </p>
-<pre><code>docker create alpine:3.4 sh
-</code></pre>
-
-<p>Run <strong>docker ps -l</strong> to see the status of the container  </p>
-<p>[Output]  </p>
-<pre><code>CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-22146d15eb71        alpine:3.4          &quot;sh&quot;                31 seconds ago      Created                                 grave_leavitt
-</code></pre>
-
-<p>If you do <strong>docker ps -l</strong>, you will find that container status to be <strong>Created</strong>. Now lets start this container by executing,   </p>
-<p>[Command]  </p>
-<pre><code>docker start 22146d15eb71
-</code></pre>
-
-<p>Run docker ps -l again to see the status change  </p>
-<p>[Output]  </p>
-<pre><code>CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                     PORTS               NAMES
-22146d15eb71        alpine:3.4          &quot;sh&quot;                3 minutes ago       Exited (0) 2 minutes ago                      grave_leavitt
-</code></pre>
-
-<p>This command will start the container and exit right away we have not specified interactive mode in the command  </p>
-<h3 id="creating-pretty-reports-with-formatters">Creating Pretty Reports with Formatters</h3>
-<pre><code>docker ps --format &quot;{{.ID}}: {{.Status}}&quot;
-</code></pre>
-
-<p>[Output]  </p>
-<pre><code>2533adf280ac: Up 12 minutes
-</code></pre>
-
-<h3 id="checking-disk-utilisation-by">Checking disk utilisation by</h3>
+<h3 id="launching-a-suse-linux-15-container">Launching a Suse Linux 15 container</h3>
+<p>Use the following commands to launch and learn how to work with SLES15 container </p>
 <pre><code>
-docker system df
+docker pull registry.suse.com/suse/sle15
 
+docker image ls
+
+docker container run -idt --name sles15 registry.suse.com/suse/sle15 bash
+
+docker exec -it sles15 bash
+
+[try running  suse linux  commands]
+
+exit
 </code></pre>
 
-<p>[output]</p>
-<pre><code>docker system df
-TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
-Images              7                   5                   1.031GB             914.5MB (88%)
-Containers          8                   4                   27.97MB             27.73MB (99%)
-Local Volumes       3                   2                   0B                  0B
-Build Cache                                                 0B                  0B
-</code></pre>
-
-<p>To prune, you could possibly use</p>
-<pre><code>docker container prune
-
-docker system prune
-</code></pre>
-
-<p>e.g.</p>
-<pre><code>docker system prune
-WARNING! This will remove:
-        - all stopped containers
-        - all networks not used by at least one container
-        - all dangling images
-        - all build cache
-Are you sure you want to continue? [y/N]
-</code></pre>
-
-<p>Make sure you understand what all will be removed before using this command.</p>
 <h3 id="stopping-and-removing-containers">Stopping and Removing Containers</h3>
 <p>We have learnt about interacting with a container, running a container, pausing and unpausing a container, creating and starting a container. But what if you want to stop the container or remove the container itself  </p>
 <h4 id="stop-a-container">Stop a container</h4>
