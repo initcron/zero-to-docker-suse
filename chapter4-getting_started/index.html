@@ -256,42 +256,18 @@ docker version
 docker system info
 </code></pre>
 
-<p>[Output of <strong>docker -v</strong>]  </p>
-<pre><code>Docker version 18.03.1-ce, build 9ee9f40
-</code></pre>
-
-<p>[Output of <strong>docker version</strong>]   </p>
-<pre><code>Client:
- Version:      18.03.1-ce
- API version:  1.37
- Go version:   go1.9.5
- Git commit:   9ee9f40
- Built:        Thu Apr 26 07:18:46 2018
- OS/Arch:      linux/amd64
- Experimental: false
- Orchestrator: swarm
-
-Server:
- Engine:
-  Version:      18.03.1-ce
-  API version:  1.37 (minimum version 1.12)
-  Go version:   go1.9.5
-  Git commit:   9ee9f40
-  Built:        Thu Apr 26 07:16:59 2018
-  OS/Arch:      linux/amd64
-  Experimental: false
-</code></pre>
-
 <p>The <strong>docker system info</strong> command gives a lot of useful information like total number of containers and images along with information about host resource utilization  etc.</p>
 <h3 id="launching-our-first-container">Launching our first container</h3>
 <p>Now we have a basic understanding of docker command and sub commands, let us dive straight into launching our very first <strong>container</strong>  </p>
 <pre><code>docker run alpine:3.4 uptime
 </code></pre>
 
-<p>Where,
-  * we are using docker <strong>client</strong> to
-  * run a application/command <strong>uptime</strong> using<br />
-  * an image by name <strong>alpine:3.4</strong></p>
+<p>Where,</p>
+<ul>
+<li>we are using docker <strong>client</strong> to  </li>
+<li>run a application/command <strong>uptime</strong> using    </li>
+<li>an image by name <strong>alpine:3.4</strong>  </li>
+</ul>
 <p>[Output]  </p>
 <pre><code>Unable to find image 'alpine:3.4' locally
 3.4: Pulling from library/alpine
@@ -502,7 +478,7 @@ ps aux
 </code></pre>
 
 <h3 id="launching-a-suse-linux-15-container">Launching a Suse Linux 15 container</h3>
-<p>Use the following commands to launch and learn how to work with SLES15 container </p>
+<p>Use the following commands to launch and learn how to work with SLES15 container</p>
 <pre><code>
 docker pull registry.suse.com/suse/sle15
 
