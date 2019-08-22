@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Dockerizing voteapp - Zero to Docker (Suse Version)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Dockerizing voteapp";
+    var mkdocs_page_input_path = "dockerizing-voteapp.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Zero to Docker (Suse Version)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Labs</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../chapter4-getting_started/">Getting Started with Docker</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../chapter5-container_operations/">Container Operations</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../dockerizing-facebooc/">Dockerizing your own App</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../chapter7-linking_containers/">Connecting apps with Docker Compose</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../chapterx-docker-networking/">Docker Single Host Networking</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../persistent-volumes/">Docker Data Persistence</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Advanced Topics</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../distributing_images/">Distributing Images</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../swarm-networking-deepdive/">SWARM Networking Deep Dive</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../troubleshooting-toolkit/">Troubleshooting Toolkit</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../docker-swarm-ucp-troubleshooting/">SWARM, UCP, DTR Troubleshooting</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../docker-security/">Docker Security</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Zero to Docker (Suse Version)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Dockerizing voteapp</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="project-build-a-docker-image-for-instavote-frontend-vote-app">Project : Build a docker image for Instavote frontend vote app</h2>
+<p><a href="https://github.com/schoolofdevops/vote">Voteapp</a> is a app written in python. Its a simple, web based  application which serves as a frontend for Instavote project. As a devops engineer, you have been tasked with building an image for vote app and publish it to docker hub registry.</p>
+<h3 id="approach-1-building-docker-image-for-facebooc-app-manually">Approach 1: Building docker image for facebooc app manually</h3>
+<p>on the host</p>
+<pre><code>git clone https://github.com/schoolofdevops/vote
+docker container run -idt --name vote -p 8000:80 python:2.7-alpine sh
+cd vote
+docker cp . vote:/app
+docker exec -it vote sh
+</code></pre>
+
+<p>inside the container</p>
+<pre><code>cd /app
+pip install -r requirements.txt
+gunicorn app:app -b 0.0.0.0:80
+</code></pre>
+
+<p>Validate by accessing http://IPADDRESS:8000</p>
+<p>on the host</p>
+<pre><code>docker diff fb
+
+docker container commit vote &lt;docker_id&gt;/vote:v1
+
+docker login
+
+docker image push &lt;docker_id&gt;/vote:v1
+
+</code></pre>
+
+<h3 id="approach-2-building-image-with-dockerfile">Approach 2: Building image with Dockerfile</h3>
+<p>Change into facebooc directory which containts the source code.  This assumes you have already cloned the repo. If not, clone it from https://github.com/schoolofdevops/facebooc</p>
+<pre><code>cd vote
+ls
+
+app.py  requirements.txt  static  templates
+</code></pre>
+
+<p>Add/create  Dockerfile the the same directory (vote) with the following content,</p>
+<pre><code># Using official python runtime base image
+FROM python:2.7-alpine
+
+# Set the application directory
+WORKDIR /app
+
+# Install our requirements.txt
+ADD requirements.txt /app/requirements.txt
+RUN pip install -r requirements.txt
+
+# Copy our code from the current folder to /app inside the container
+ADD . /app
+
+# Make port 80 available for links and/or publish
+EXPOSE 80
+
+# Define our command to be run when launching the container
+CMD  gunicorn app:app -b 0.0.0.0:80 --log-file - --access-logfile - --workers 4 --keep-alive 0
+</code></pre>
+
+<p>Build image using,</p>
+<pre><code> docker build -t &lt;docker_id&gt;/vote:v2 .
+</code></pre>
+
+<p>where,
+  <docker_id> : your docker registry user/namespace. Replace this with the actual user</p>
+<p>validate</p>
+<pre><code>docker image ls
+docker image history &lt;docker_id&gt;/vote:v2
+docker image history &lt;docker_id&gt;/vote:v1
+
+docker container run -idt -P &lt;docker_id&gt;/vote:v2
+docker ps
+</code></pre>
+
+<p>Check by connecting to your host:port to validate if vote web application shows up.</p>
+<p>Once validated, tag and push</p>
+<pre><code>docker image tag &lt;docker_id&gt;/vote:v2 &lt;docker_id&gt;/vote:latest
+docker login
+docker push &lt;docker_id&gt;/vote
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
